@@ -69,8 +69,6 @@ final class Container
     }
 
     /**
-     * Checks if a singleton exists and is already instantiated
-     *
      * @param string $abstract
      * @return bool
      */
@@ -90,8 +88,6 @@ final class Container
     }
 
     /**
-     * Checks if a binding exists for the given abstract
-     *
      * @param string $abstract
      * @return bool
      */
@@ -136,8 +132,6 @@ final class Container
     }
 
     /**
-     * Resolves a binding to an object instance
-     *
      * @param string $abstract
      * @param mixed $concrete
      * @return object

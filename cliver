@@ -1,19 +1,20 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
-
 use Cliver\Core\Console\Application;
 use Cliver\Core\Console\ErrorHandler;
 use Cliver\Core\Core\Bootstrap;
 
+require __DIR__ . '/vendor/autoload.php';
+
 $container = Bootstrap::init();
 
 try {
+    /** @var Application $app */
     $app = $container->get(Application::class);
-    $exitCode = $app->run($_SERVER['argv'])->value;
+    $status = $app->run($_SERVER['argv'])->value;
 } catch (Throwable $e) {
-    exit(ErrorHandler::handle($e)->value);
+    $status = ErrorHandler::handle($e)->value;
 }
 
-exit($exitCode);
+exit($status);

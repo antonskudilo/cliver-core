@@ -4,6 +4,7 @@ namespace Cliver\Core\Core;
 use Cliver\Core\Console\AppConfig;
 use Cliver\Core\Console\CommandRegistry;
 use Cliver\Core\Console\CommandResolver;
+use Cliver\Core\Providers\CoreProviders;
 use Cliver\Core\Providers\ServiceProviderInterface;
 
 final class Bootstrap
@@ -19,7 +20,6 @@ final class Bootstrap
 
         self::registerCore($container);
         self::registerProviders($container);
-        self::registerServices($container);
 
         return $container;
     }
@@ -44,7 +44,6 @@ final class Bootstrap
     {
         $container->singleton(Container::class, $container);
         $container->singleton(CommandRegistry::class, new CommandRegistry());
-
         $container->singleton(CommandResolver::class, fn(Container $c) =>
             new CommandResolver($c->get(CommandRegistry::class), $c)
         );
@@ -78,7 +77,7 @@ final class Bootstrap
      */
     private static function loadCoreProviders(): array
     {
-        return AppConfig::loadConfig(AppConfig::pathCoreProviders());
+        return CoreProviders::providers();
     }
 
     /**
@@ -87,65 +86,5 @@ final class Bootstrap
     private static function loadUserProviders(): array
     {
         return AppConfig::loadConfig(AppConfig::pathUserProviders());
-    }
-
-    /**
-     * @param Container $container
-     * @return void
-     */
-    private static function registerServices(Container $container): void
-    {
-        $services = self::getServices();
-
-        foreach ($services[AppConfig::KEY_SINGLETONS] as $abstract => $concrete) {
-            $container->singleton($abstract, $concrete);
-        }
-
-        foreach ($services[AppConfig::KEY_BINDINGS] as $abstract => $concrete) {
-            $container->bind($abstract, $concrete);
-        }
-
-        if (isset($services[AppConfig::KEY_DEFAULT_COMMAND])) {
-            $container->bind(AppConfig::KEY_DEFAULT_COMMAND, $services[AppConfig::KEY_DEFAULT_COMMAND]);
-        }
-    }
-
-    /**
-     * @return array
-     */
-    private static function getServices(): array
-    {
-        $coreServices = self::loadCoreServices();
-        $userServices = self::loadUserServices();
-
-        return [
-            AppConfig::KEY_SINGLETONS => array_merge(
-                $coreServices[AppConfig::KEY_SINGLETONS] ?? [],
-                $userServices[AppConfig::KEY_SINGLETONS] ?? []
-            ),
-            AppConfig::KEY_BINDINGS => array_merge(
-                $coreServices[AppConfig::KEY_BINDINGS] ?? [],
-                $userServices[AppConfig::KEY_BINDINGS] ?? []
-            ),
-            AppConfig::KEY_DEFAULT_COMMAND => $userServices[AppConfig::KEY_DEFAULT_COMMAND]
-                ?? $coreServices[AppConfig::KEY_DEFAULT_COMMAND]
-                    ?? null,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private static function loadCoreServices(): array
-    {
-        return AppConfig::loadConfig(AppConfig::pathCoreServices());
-    }
-
-    /**
-     * @return array
-     */
-    private static function loadUserServices(): array
-    {
-        return AppConfig::loadConfig(AppConfig::pathUserServices());
     }
 }
