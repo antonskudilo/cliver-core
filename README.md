@@ -12,6 +12,16 @@ The goal of this project is to provide a foundation (dependency injection contai
 ## Requirements
 - PHP 8.3 or higher
 
+## Version
+
+Current release: **0.1.0**
+
+You can require the framework core via Composer:
+
+```bash
+composer require antonskudilo/cliver-core:^0.1
+```
+
 ## Installation
 
 ```bash
