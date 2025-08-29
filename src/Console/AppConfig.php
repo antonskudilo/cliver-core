@@ -5,21 +5,18 @@ namespace Cliver\Core\Console;
 final readonly class AppConfig
 {
     public const string KEY_DEFAULT_COMMAND = 'default_command';
+    public const string PATH_USER_PROVIDERS = 'bootstrap/providers.php';
 
     /**
      * @param string $path
-     * @return array
+     * @return void
      */
-    public static function loadConfig(string $path): array
+    public static function loadEnv(string $path): void
     {
-        return file_exists($path) ? require $path : [];
-    }
+        $envFile = join_path($path, '.env');
 
-    /**
-     * @return string
-     */
-    public static function pathUserProviders(): string
-    {
-        return base_path('bootstrap/providers.php');
+        if (file_exists($envFile)) {
+            loadEnv($envFile);
+        }
     }
 }

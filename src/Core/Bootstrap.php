@@ -7,33 +7,22 @@ use Cliver\Core\Console\CommandResolver;
 use Cliver\Core\Providers\CoreProviders;
 use Cliver\Core\Providers\ServiceProviderInterface;
 
-final class Bootstrap
+final readonly class Bootstrap
 {
     /**
+     * @param string $basePath
      * @return Container
      */
-    public static function init(): Container
+    public static function init(string $basePath): Container
     {
-        self::loadEnv();
+        AppConfig::loadEnv($basePath);
 
         $container = new Container();
 
         self::registerCore($container);
-        self::registerProviders($container);
+        self::registerProviders($container, $basePath);
 
         return $container;
-    }
-
-    /**
-     * @return void
-     */
-    private static function loadEnv(): void
-    {
-        $envFile = base_path('.env');
-
-        if (file_exists($envFile)) {
-            loadEnv($envFile);
-        }
     }
 
     /**
@@ -51,11 +40,12 @@ final class Bootstrap
 
     /**
      * @param Container $container
+     * @param string $basePath
      * @return void
      */
-    private static function registerProviders(Container $container): void
+    private static function registerProviders(Container $container, string $basePath): void
     {
-        foreach (self::getProviders() as $providerClass) {
+         foreach (self::loadProviders($basePath) as $providerClass) {
             $provider = new $providerClass();
             $provider->register($container);
         }
@@ -64,27 +54,11 @@ final class Bootstrap
     /**
      * @return array<ServiceProviderInterface>
      */
-    private static function getProviders(): array
+    private static function loadProviders(string $basePath): array
     {
         return array_merge(
-            self::loadCoreProviders(),
-            self::loadUserProviders()
+            CoreProviders::providers(),
+            load_from(join_path($basePath, AppConfig::PATH_USER_PROVIDERS))
         );
-    }
-
-    /**
-     * @return array<ServiceProviderInterface>
-     */
-    private static function loadCoreProviders(): array
-    {
-        return CoreProviders::providers();
-    }
-
-    /**
-     * @return array<ServiceProviderInterface>
-     */
-    private static function loadUserProviders(): array
-    {
-        return AppConfig::loadConfig(AppConfig::pathUserProviders());
     }
 }
