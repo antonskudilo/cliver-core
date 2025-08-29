@@ -1,7 +1,7 @@
 <?php
 
-use App\Console\AppConfig;
-use App\Console\Commands\HelpCommand;
+use Cliver\Core\Console\AppConfig;
+use Cliver\Core\Console\Commands\HelpCommand;
 
 return [
     AppConfig::KEY_SINGLETONS => [

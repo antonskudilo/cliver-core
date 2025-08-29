@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Console;
+namespace Cliver\Core\Console;
 
-use App\Exceptions\CommandAlreadyRegisteredException;
-use App\Exceptions\CommandNotFoundException;
+use Cliver\Core\Exceptions\CommandAlreadyRegisteredException;
+use Cliver\Core\Exceptions\CommandNotFoundException;
 
 final class CommandRegistry
 {

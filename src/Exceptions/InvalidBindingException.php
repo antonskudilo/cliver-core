@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions;
+namespace Cliver\Core\Exceptions;
 
 final class InvalidBindingException extends ConsoleException
 {

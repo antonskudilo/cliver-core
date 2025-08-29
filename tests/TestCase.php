@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Tests;
+namespace Cliver\Core\Tests;
 
-use App\Console\Application;
-use App\Core\Bootstrap;
-use App\Core\Container;
-use App\Exceptions\ConsoleException;
+use Cliver\Core\Console\Application;
+use Cliver\Core\Core\Bootstrap;
+use Cliver\Core\Core\Container;
+use Cliver\Core\Exceptions\ConsoleException;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use ReflectionException;
 

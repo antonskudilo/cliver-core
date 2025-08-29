@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Cliver\Core\Console\Commands;
 
 interface CommandInterface
 {

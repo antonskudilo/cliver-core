@@ -13,7 +13,7 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "src/"
+      "Cliver\\Core\\": "src/"
     },
     "files": [
       "src/helpers.php"
@@ -21,7 +21,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "App\\Tests\\": "tests/"
+      "Cliver\\Core\\Tests\\": "tests/"
     }
   },
   "bin": [

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Providers;
+namespace Cliver\Core\Providers;
 
-use App\Core\Container;
+use Cliver\Core\Core\Container;
 
 interface ServiceProviderInterface
 {

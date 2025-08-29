@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Console;
+namespace Cliver\Core\Console;
 
-use App\Exceptions\ConsoleException;
+use Cliver\Core\Exceptions\ConsoleException;
 use Throwable;
 
-final class ErrorHandler
+final readonly class ErrorHandler
 {
     /**
      * Handles exception and prints error description

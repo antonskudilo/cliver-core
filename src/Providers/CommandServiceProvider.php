@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Providers;
+namespace Cliver\Core\Providers;
 
-use App\Console\AppConfig;
-use App\Console\CommandRegistry;
-use App\Console\Commands\CommandInterface;
-use App\Core\Container;
-use App\Exceptions\CommandAlreadyRegisteredException;
-use App\Exceptions\ConsoleException;
-use App\Exceptions\InvalidCommandClassException;
+use Cliver\Core\Console\AppConfig;
+use Cliver\Core\Console\CommandRegistry;
+use Cliver\Core\Console\Commands\CommandInterface;
+use Cliver\Core\Core\Container;
+use Cliver\Core\Exceptions\CommandAlreadyRegisteredException;
+use Cliver\Core\Exceptions\ConsoleException;
+use Cliver\Core\Exceptions\InvalidCommandClassException;
 use ReflectionException;
 
 final class CommandServiceProvider implements ServiceProviderInterface

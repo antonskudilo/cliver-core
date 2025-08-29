@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Console;
+namespace Cliver\Core\Console;
 
-final class Input
+final readonly class Input
 {
     /**
      * @var null|string
@@ -14,6 +14,17 @@ final class Input
 
     public function __construct(array $argv)
     {
+        $this->sanitizeArgv($argv);
+        $this->command = $argv[0] ?? null;
+        $this->args = array_slice($argv, 1);
+    }
+
+    /**
+     * @param array $argv
+     * @return void
+     */
+    private function sanitizeArgv(array &$argv): void
+    {
         if (
             !empty($argv[0])
             && (
@@ -24,11 +35,11 @@ final class Input
         ) {
             array_shift($argv);
         }
-
-        $this->command = $argv[0] ?? null;
-        $this->args = array_slice($argv, 1);
     }
 
+    /**
+     * @return string|null
+     */
     public function getCommandName(): ?string
     {
         return $this->command;

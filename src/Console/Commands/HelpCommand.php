@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Cliver\Core\Console\Commands;
 
-use App\Console\CommandRegistry;
-use App\Core\Container;
-use App\Exceptions\ConsoleException;
+use Cliver\Core\Console\CommandRegistry;
+use Cliver\Core\Core\Container;
+use Cliver\Core\Exceptions\ConsoleException;
 use ReflectionException;
 
 final readonly class HelpCommand implements CommandInterface

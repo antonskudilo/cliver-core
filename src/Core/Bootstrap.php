@@ -1,10 +1,10 @@
 <?php
-namespace App\Core;
+namespace Cliver\Core\Core;
 
-use App\Console\AppConfig;
-use App\Console\CommandRegistry;
-use App\Console\CommandResolver;
-use App\Providers\ServiceProviderInterface;
+use Cliver\Core\Console\AppConfig;
+use Cliver\Core\Console\CommandRegistry;
+use Cliver\Core\Console\CommandResolver;
+use Cliver\Core\Providers\ServiceProviderInterface;
 
 final class Bootstrap
 {

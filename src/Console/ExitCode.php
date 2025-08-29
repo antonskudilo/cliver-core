@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console;
+namespace Cliver\Core\Console;
 
 enum ExitCode: int
 {

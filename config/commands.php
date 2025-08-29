@@ -1,5 +1,7 @@
 <?php
 
+use Cliver\Core\Console\Commands\HelpCommand;
+
 return [
-    \App\Console\Commands\HelpCommand::class,
+    HelpCommand::class,
 ];

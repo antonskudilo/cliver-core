@@ -1,5 +1,5 @@
 <?php
 
 return [
-    App\Providers\CommandServiceProvider::class,
+    Cliver\Core\Providers\CommandServiceProvider::class,
 ];

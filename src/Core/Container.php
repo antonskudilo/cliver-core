@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Core;
+namespace Cliver\Core\Core;
 
-use App\Exceptions\CannotResolveParameterException;
-use App\Exceptions\ConsoleException;
-use App\Exceptions\InvalidBindingException;
-use App\Exceptions\ServiceNotFoundException;
+use Cliver\Core\Exceptions\CannotResolveParameterException;
+use Cliver\Core\Exceptions\ConsoleException;
+use Cliver\Core\Exceptions\InvalidBindingException;
+use Cliver\Core\Exceptions\ServiceNotFoundException;
 use ReflectionClass;
 use ReflectionException;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Console;
+namespace Cliver\Core\Console;
 
-use App\Console\Commands\CommandInterface;
+use Cliver\Core\Console\Commands\CommandInterface;
 
 final readonly class CommandDefinition
 {

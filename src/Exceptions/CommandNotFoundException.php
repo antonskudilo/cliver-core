@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Exceptions;
+namespace Cliver\Core\Exceptions;
 
-use App\Console\ExitCode;
+use Cliver\Core\Console\ExitCode;
 
 class CommandNotFoundException extends ConsoleException
 {

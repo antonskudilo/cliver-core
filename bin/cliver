@@ -3,9 +3,9 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use App\Console\Application;
-use App\Console\ErrorHandler;
-use App\Core\Bootstrap;
+use Cliver\Core\Console\Application;
+use Cliver\Core\Console\ErrorHandler;
+use Cliver\Core\Core\Bootstrap;
 
 $container = Bootstrap::init();
 

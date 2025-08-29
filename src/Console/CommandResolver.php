@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Console;
+namespace Cliver\Core\Console;
 
-use App\Console\Commands\CommandInterface;
-use App\Core\Container;
-use App\Exceptions\ConsoleException;
+use Cliver\Core\Console\Commands\CommandInterface;
+use Cliver\Core\Core\Container;
+use Cliver\Core\Exceptions\ConsoleException;
 use ReflectionException;
 
 final readonly class CommandResolver
