@@ -58,7 +58,7 @@ final readonly class Bootstrap
     {
         return array_merge(
             CoreProviders::providers(),
-            load_from(join_path($basePath, AppConfig::PATH_USER_PROVIDERS))
+            (array)load_from(join_path($basePath, AppConfig::PATH_USER_PROVIDERS))
         );
     }
 }

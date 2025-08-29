@@ -20,10 +20,10 @@ if (!function_exists('load_from')) {
      * @param mixed $default
      * @return array
      */
-    function load_from(string $path, mixed $default = []): array
+    function load_from(string $path, mixed $default = []): mixed
     {
         if (file_exists($path)) {
-            require $path;
+            return require $path;
         }
 
         return $default;
