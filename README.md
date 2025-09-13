@@ -4,7 +4,7 @@ A minimalistic **core** for building a PHP CLI framework.
 The goal of this project is to provide a foundation (dependency injection container, services, providers, command registry) on top of which you can build your own CLI applications and extend functionality.
 
 ## Core features
-- Simple command registration via config
+- Simple command registration
 - Dependency Injection support
 - Service providers and singletons
 - Can be used as a library to build your own CLI framework
@@ -36,7 +36,7 @@ composer dump-autoload
 php bin/cliver
 ```
 
-*By default, when no command name is provided, the application runs the HelpCommand.
+*By default, when no command name is provided, the application runs the `HelpCommand`.
 It displays all available commands in the format signature → description:*
 
 ```bash
@@ -44,132 +44,76 @@ Available commands:
 help   Show the list of available commands
 ```
 
-*The default command can be redefined in the config\services.php configuration (see item "Service configuration").*
+*The default command can be redefined in the `Providers/AppServiceProvider` (see item "Service configuration").*
 
 ## Running commands
-All commands are defined in config/commands.php.
+To register and use commands, they must be added to `Providers/CommandServiceProvider`.  
+Core commands (for example, `HelpCommand`) should be registered in `Console/Commands/CoreCommands.php`.
 
-#### Register the command in config/commands.php:
+#### Register the command in `Console/Commands/CoreCommands.php`:
 
 ```bash
-return [
-    App\Console\Commands\PrintCommand::class,
-];
+    public static function commands(): array
+    {
+        return [
+            HelpCommand::class,
+        ];
+    }
 ```
 
-Each command defines its own static getName() method, which is used as the CLI signature.
+Each command defines its own static method `getName`, which is used as the CLI signature.
 
-#### Example of a custom command:
+#### Help command:
 
 ```bash
-final class PrintCommand implements CommandInterface
+final readonly class HelpCommand implements CommandInterface
 {
-    private PrinterInterface $printer;
-
-    public function __construct(PrinterInterface $printer)
-    {
-        $this->printer = $printer;
-    }
-    
     public static function getName(): string
     {
-        return 'print';
+        return 'help';
     }
-
-    public static function getDescription(): string
-    {
-        return 'Example print command';
-    }
-
-    public function execute(array $arguments = []): void
-    {
-        $this->printer->print();
-    }
+    
+    ...
 }
 ```
 
 ## Dependency injection container
 
 The framework core includes a simple DI container.
-Services can be registered in config/services.php or provided dynamically in tests.
-
-#### PrinterInterface:
-
-```bash
-interface PrinterInterface
-{
-    public function print(): void;
-}
-```
-
-#### ConsolePrinter:
-
-```bash
-class ConsolePrinter implements PrinterInterface
-{
-    public function print(): void
-    {
-        println('Hello, I`m a ConsolePrinter');
-    }
-}
-```
+Core services should be registered in `Providers/CoreProviders`.
+Services can be registered in `Providers/AppServiceProvider` or provided dynamically.
 
 ## Service configuration
 
-#### All service bindings are defined in the config/services.php file. It contains three main sections:
-
-- singletons — a list of classes or interfaces that should be resolved as singletons (same instance reused).
-- bindings — regular service bindings, where each call to the container returns a new instance.
-- default_command — the command that will run if no command name is provided (by default, HelpCommand).
+#### Service bindings could be defined in the `Providers/AppServiceProvider`. 
+It contains the `register` method, which can be used for `bind` and `singleton`, using the container instance passed as a parameter.
 
 This allows you to configure how dependencies are resolved across the application, and makes it easy to swap or mock implementations in tests.
 
-#### Service binding (config/services.php):
+#### `Providers/AppServiceProvider`:
 
 ```bash
-return [
-  'bindings' => [
-    App\Services\PrinterInterface::class => App\Services\ConsolePrinter::class,
-  ],
-];
+final class AppServiceProvider implements ServiceProviderInterface
+{
+    public function register(Container $container): void
+    {
+        $container->bind(
+          AppConfig::KEY_DEFAULT_COMMAND, 
+          HelpCommand::class
+        );
+    }
+}
 ```
 
 #### Now you can run:
 
 ```bash
-php bin/cliver print
-```
-
-## Overriding dependencies in tests
-
-When writing tests, you can replace services on-the-fly using the DI container.
-This is useful for mocking dependencies like console output, external API calls, etc.
-
-#### Example: overriding the PrinterInterface with a test implementation:
-
-```bash
-$this->container->bind(
-    App\Services\PrinterInterface::class,
-    new App\Tests\TestPrinter()
-);
-```
-This allows your command to use the test printer instead of the real console printer.
-
-#### TestPrinter:
-
-```bash
-class TestPrinter implements PrinterInterface
-{
-    public function print(): void
-    {
-        echo 'Hello, I`m a TestPrinter';
-    }
-}
+php bin/cliver help
 ```
 
 ## Base test case
 
-A base test class (tests/TestCase.php) is provided to bootstrap the application and container for every test:
+A base test class `tests/TestCase.php` is provided to bootstrap the application and container for every test:
 
 ```bash
 class TestCase extends BaseTestCase
@@ -213,38 +157,6 @@ class TestCase extends BaseTestCase
 }
 ```
 
-## Testing a command
-
-#### Example of a test for a command registered in config/commands.php:
-
-```bash
-final class PrintCommandTest extends TestCase
-{
-    public function testCommandOutput(): void
-    {
-        $this->fakeSingleton(
-            PrinterInterface::class, 
-            new TestPrinter()
-        );
-
-        ob_start();
-        $app->run(['print']);
-        $output = ob_get_clean();
-        
-        $this->assertStringContainsString(
-            'Hello, I`m a TestPrinter', 
-            $output
-        );
-    }
-}
-```
-
-## Running tests
-
-```bash
-vendor/bin/phpunit --colors=always
-```
-
 ## Helpers
 
 This project includes a set of helper functions grouped into console, environment, and path utilities.
@@ -252,39 +164,37 @@ They simplify working with CLI output, environment variables, and project paths.
 
 #### Console helpers
 
-- **errorln(string $message = '')** – print a message to STDERR with a [Error] prefix.
-- **pad(string $label, string $value, int $padLength = 25)** – format label/value pairs with aligned output.
-- **padAuto(array $rows)** – automatically align and print an array of key => value pairs.
-- **println(string $message = '')** – print a message to STDOUT with a newline.
+- `errorln(string $message = '')` – print a message to STDERR with a [Error] prefix.
+- `pad(string $label, string $value, int $padLength = 25)` – format label/value pairs with aligned output.
+- `padAuto(array $rows)` – automatically align and print an array of key => value pairs.
+- `println(string $message = '')` – print a message to STDOUT with a newline.
 
 #### Environment helpers
 
-- **env(string $key, mixed $default = null)** – retrieve an environment variable with type casting (true/false/null).
-- **is_debug()** – check if APP_DEBUG is enabled.
-- **loadEnv(string $path)** – load variables from a .env file into $_ENV, $_SERVER, and getenv().
+- `env(string $key, mixed $default = null)` – retrieve an environment variable with type casting (true/false/null).
+- `is_debug()` – check if APP_DEBUG is enabled.
+- `loadEnv(string $path)` – load variables from a .env file into $_ENV, $_SERVER, and getenv().
 
 #### Path helpers
 
-- **base_path(string $path = '')** – get the absolute path relative to the project root.
-- **config_path(string $path = '')** – get the absolute path to the config/ directory.
-- **join_path(string $base, string $path = '')** – safely concatenate directory paths.
+- `base_path(string $path = '')` – get the absolute path relative to the project root.
+- `config_path(string $path = '')` – get the absolute path to the config/ directory.
+- `join_path(string $base, string $path = '')` – safely concatenate directory paths.
 
 ## Environment configuration
 
-The application uses a .env file in the project root to configure environment variables.
-A template file .env.example is provided and can be copied to create your own .env.
+The application uses a `.env` file in the project root to configure environment variables.
+A template file `.env.example` is provided and can be copied to create your own `.env`.
 
 #### Currently, it supports:
 
-- **APP_DEBUG** — when set to true, full stack traces are displayed in the console.
+- `APP_DEBUG` — when set to true, full stack traces are displayed in the console.
 Otherwise, only a short error message is shown. This allows easy switching between development and production modes.
 
 
 ## Project structure
 
 ```bash
-├── bin/cliver                    # CLI entry script
-├── config/                       # Configs (commands, providers, services)
 ├── src/                          # Core source code
 │   ├── Console/                  # CLI commands, input/output handling
 │   │   └── Commands/             # Core commands, CommandInterface
@@ -293,6 +203,7 @@ Otherwise, only a short error message is shown. This allows easy switching betwe
 │   ├── Helpers/                  # Helpers should be included in src/helpers.php
 │   └── Providers/                # Core service providers
 ├── tests/                        # PHPUnit tests
+├── cliver                        # CLI entry script
 ├── composer.json
 └── phpunit.xml
 ```
