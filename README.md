@@ -113,17 +113,16 @@ php bin/cliver help
 
 ## Base test case
 
-A base test class `tests/TestCase.php` is provided to bootstrap the application and container for every test:
+A base test class `Testing/TestCase.php` is provided to bootstrap the application and container for every test:
 
 ```bash
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
     protected Container $container;
 
-    protected function setUp(): void
+    protected function getContainer(string $basePath): void
     {
-        parent::setUp();
-        $this->container = Bootstrap::init();
+        $this->container = Bootstrap::init($basePath);
     }
 
     protected function makeApp(): Application
@@ -177,8 +176,7 @@ They simplify working with CLI output, environment variables, and project paths.
 
 #### Path helpers
 
-- `base_path(string $path = '')` – get the absolute path relative to the project root.
-- `config_path(string $path = '')` – get the absolute path to the config/ directory.
+- `load_from(string $path, mixed $default = [])` – loading data from a specific file
 - `join_path(string $base, string $path = '')` – safely concatenate directory paths.
 
 ## Environment configuration
@@ -201,7 +199,8 @@ Otherwise, only a short error message is shown. This allows easy switching betwe
 │   ├── Core/                     # Bootstrap, DI container
 │   ├── Exceptions/               # Exceptions
 │   ├── Helpers/                  # Helpers should be included in src/helpers.php
-│   └── Providers/                # Core service providers
+│   ├── Providers/                # Core service providers
+│   └── Testing/                  # Testing utilities
 ├── tests/                        # PHPUnit tests
 ├── cliver                        # CLI entry script
 ├── composer.json

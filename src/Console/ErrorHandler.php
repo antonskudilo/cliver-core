@@ -21,11 +21,17 @@ final readonly class ErrorHandler
             $exitCode = ExitCode::ERROR;
         }
 
-        errorln($exitCode->description());
+        $description = $exitCode->description();
+        $errorMessage = $e->getMessage();
+
+        if (strlen($errorMessage)) {
+            $description .= ": $errorMessage";
+        }
+
+        errorln($description);
 
         if (is_debug()) {
-            errorln(PHP_EOL . $e->getMessage() . PHP_EOL);
-            errorln(PHP_EOL . $e->getTraceAsString() . PHP_EOL);
+            errorln($e->getTraceAsString());
         }
 
         return $exitCode;
