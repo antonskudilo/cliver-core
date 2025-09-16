@@ -25,7 +25,7 @@
     }
   },
   "bin": [
-    "cliver"
+    "bin/cliver"
   ],
   "minimum-stability": "dev",
   "prefer-stable": true
